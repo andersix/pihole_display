@@ -28,6 +28,8 @@ class ButtonManager:
             logger.info("Initializing ButtonManager and controllers")
             self.display = display_manager
             self.backlight = DisplayBacklight()
+            # Pass backlight to display manager
+            self.display.set_backlight(self.backlight)
             self.pihole = PiHole(display_manager=self.display)
             self.system = SystemOs(display_manager=self.display)
         except Exception as e:

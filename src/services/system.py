@@ -48,7 +48,7 @@ class SystemOs:
         """Cancel pending system control confirmation"""
         if self._waiting_for_confirmation:
             logger.info("System control cancelled")
-            print("\nSystem control cancelled")
+            print("\n    System control cancelled")
             self._clear_confirmation_state()
             time.sleep(FEEDBACK_DELAY)
             self.display.switch_to_padd()
@@ -81,7 +81,7 @@ class SystemOs:
         """Handle system reboot"""
         logger.info("Initiating system reboot")
         try:
-            print("\nRebooting system...")
+            print("\n    Rebooting system...")
             time.sleep(FEEDBACK_DELAY)
             subprocess.run(['sudo', 'reboot'], check=True)
         except subprocess.SubprocessError as e:
@@ -92,7 +92,7 @@ class SystemOs:
         """Handle system shutdown"""
         logger.info("Initiating system shutdown")
         try:
-            print("\nShutting down system...")
+            print("\n    Shutting down system...")
             time.sleep(FEEDBACK_DELAY)
             subprocess.run(['sudo', 'shutdown', '-h', 'now'], check=True)
         except subprocess.SubprocessError as e:

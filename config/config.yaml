@@ -6,7 +6,7 @@ display:
     gamma: 1.8
     retry_attempts: 3
   tmux:
-    session_name: 'padd'
+    session_name: 'display'
     padd_window: 'padd'
     control_window: 'control'
 
@@ -14,24 +14,24 @@ buttons:
   '1':
     pin: 17
     function: "brightness_system"
-    hold_time: 5.0  # 5 seconds for system control
+    hold_time: 5.0  # Hold for 5 seconds to enter system request
     pull_up: true
     bounce_time: 0.05
   '2':
     pin: 22
     function: "update_select"
-    hold_time: 1.0  # 1 second for update selection
+    hold_time: 1.0  # Hold for 1 second to enter update request
     pull_up: true
     bounce_time: 0.05
   '3':
     pin: 23
-    function: "confirm_1"  # First confirmation option in either mode
+    function: "confirm_1"  # First confirmation option used in system/update request
     hold_time: 0.0
     pull_up: true
     bounce_time: 0.05
   '4':
     pin: 27
-    function: "confirm_2"  # Second confirmation option in either mode
+    function: "confirm_2"  # Second confirmation option used in system/update request
     hold_time: 0.0
     pull_up: true
     bounce_time: 0.05
@@ -39,6 +39,7 @@ buttons:
 logging:
   file: "pihole_display.log"
   level: "INFO"
-  max_bytes: 1048576  # 1MB
-  backup_count: 5
+#  level: "DEBUG"
+  max_bytes: 1048576  # Rotate every 1MB
+  backup_count: 5 # only keep this many logs
 

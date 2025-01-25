@@ -56,7 +56,7 @@ class PiHole:
         """Cancel any pending update confirmation"""
         if self._waiting_for_confirmation:
             logger.info("Update cancelled")
-            print("\nUpdate cancelled")
+            print("\n    Update cancelled")
             self._clear_confirmation_state()
             time.sleep(FEEDBACK_DELAY)
             self.display.switch_to_padd()

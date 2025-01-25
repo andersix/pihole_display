@@ -3,23 +3,22 @@
 # If we're on the PiTFT screen (ssh is xterm)
 if [ "$TERM" == "linux" ] ; then
     # Create or attach to tmux session
-    if ! tmux has-session -t padd 2>/dev/null; then
+    if ! tmux has-session -t display 2>/dev/null; then
         # Create new session with first window running PADD
-        tmux new-session -d -s padd -n padd '/home/pi/PADD/padd.sh'
+        tmux new-session -d -s display -n padd '/home/pi/PADD/padd.sh'
         
         # Disable status line
-        tmux set-option -t padd status off
+        tmux set-option -t display status off
         
-        # Create second window for Python app
-        tmux new-window -t padd:1 -n control '/usr/bin/python3 /home/pi/pihole_display/main.py'
+        # Create second window for pihole display control
+        tmux new-window -t display:1 -n control
         
         # Select PADD window as default
-        tmux select-window -t padd:padd
+        tmux select-window -t display:padd
     fi
     
     # Attach to session if we're on tty1
     if [ "$(tty)" == "/dev/tty1" ]; then
-        exec tmux attach-session -t padd
+        exec tmux attach-session -t display
     fi
 fi
-
