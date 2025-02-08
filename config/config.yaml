@@ -3,9 +3,11 @@ display:
   backlight:
     pin: 18
     pwm_frequency: 240
-    gamma: 1.8
+    gamma: 1.5
     retry_attempts: 3
-    brightness_levels: [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
+#    brightness_levels: [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
+    brightness_levels: [1.0, 0.875, 0.75, 0.625, 0.5, 0.375, 0.25, 0.125, 0.0]
+#    brightness_levels: [1.0, 0.857, 0.714, 0.571, 0.429, 0.286, 0.143, 0.0]
   tmux:
     session_name: 'display'
     padd_window: 'padd'
@@ -66,7 +68,7 @@ timing:
 # Logging configuration
 logging:
   file: "pihole_display.log"
-  level: "INFO"
+  level: "DEBUG"
   max_bytes: 1048576  # 1MB
   backup_count: 5
 

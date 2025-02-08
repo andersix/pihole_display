@@ -61,48 +61,57 @@ class PiHole:
             time.sleep(FEEDBACK_DELAY)
             self.display.switch_to_padd()
 
-    def handle_button2_press(self) -> None:
-        """Handle button 2 press for PADD update confirmation"""
-        if self._waiting_for_confirmation:
-            logger.info("PADD update selected")
-            self._clear_confirmation_state()
-            self.update_padd()
-
     def handle_button2_held(self, hold_time: float) -> None:
-        """Handle button 2 hold event for showing update selection"""
+        """Handle button 2 hold event for showing Pi-Hole menu"""
         logger.info(f"Button 2 held for {hold_time:.1f} seconds")
 
         if hold_time >= UPDATE_SELECT_HOLD:
-            logger.info("Showing update selection")
+            logger.info("Showing Pi-Hole menu")
             self._waiting_for_confirmation = True
             self._start_confirmation_timer()
-            if not self.display.show_update_selection():
-                logger.error("Failed to show update selection screen")
+            if not self.display.show_pihole_menu():
+                logger.error("Failed to show pihole menu screen")
                 self.cancel_update()
 
-    def handle_button3_press(self) -> None:
-        """Handle button 3 press for gravity update confirmation"""
+    def handle_button2_press(self) -> None:
+        """Handle button 2 press for gravity update confirmation"""
         if self._waiting_for_confirmation:
+            print("    Gravity update selected\n")
             logger.info("Gravity update selected")
             self._clear_confirmation_state()
             self.update_gravity()
 
-    def handle_button4_press(self) -> None:
-        """Handle button 4 press for pihole update confirmation"""
+    def handle_button3_press(self) -> None:
+        """Handle button 3 press for pihole update confirmation"""
         if self._waiting_for_confirmation:
+            print("    Pi-hole update selected\n")
             logger.info("Pi-hole update selected")
             self._clear_confirmation_state()
             self.update_pihole()
 
-    def _run_pihole_command(self, command: list[str], operation: str) -> None:
+    def handle_button4_press(self) -> None:
+        """Handle button 4 press for PADD update confirmation"""
+        if self._waiting_for_confirmation:
+            print("    PADD update selected\n")
+            logger.info("PADD update selected")
+            self._clear_confirmation_state()
+            self.update_padd()
+
+
+    def _run_process_command(self, command: list[str], operation: str, cwd: Optional[str] = None, finish: bool = True) -> int:
         """
-        Execute a Pi-hole command with proper output handling
+        Execute a process command with proper output handling
 
         Args:
             command: Command list to execute
-            operation: Name of operation for logging
+            operation: Operation name for logging
+            cwd: Optional working directory for command
+            finish: Whether to switch back to PADD when done
+
+        Returns:
+            Process return code
         """
-        logger.info(f"Starting Pi-hole {operation}")
+        logger.info(f"Starting {operation}")
         try:
             process = subprocess.Popen(
                 command,
@@ -110,7 +119,8 @@ class PiHole:
                 stderr=subprocess.PIPE,
                 text=True,
                 bufsize=1,
-                universal_newlines=True
+                universal_newlines=True,
+                cwd=cwd
             )
 
             while process.poll() is None:
@@ -122,26 +132,38 @@ class PiHole:
 
             if returncode == 0:
                 logger.info(f"{operation} completed successfully")
-                print(f"\n{operation} completed successfully")
+                if finish:
+                    print(f"\n    {operation} completed successfully")
             else:
                 logger.error(f"{operation} failed")
-                print(f"\n{operation} failed")
+                if finish:
+                    print(f"\n    {operation} failed")
+
+            return returncode
 
         except subprocess.SubprocessError as e:
             logger.error(f"Failed to {operation}: {str(e)}")
-            print(f"\n    Error: Failed to {operation}: {str(e)}")
+            if finish:
+                print(f"\n    Error: Failed to {operation}: {str(e)}")
             raise ServiceError(f"Failed to {operation}: {str(e)}")
         finally:
-            time.sleep(FEEDBACK_DELAY)
-            self.display.switch_to_padd()
+            if finish:
+                time.sleep(FEEDBACK_DELAY)
+                self.display.switch_to_padd()
 
     def update_gravity(self) -> None:
         """Execute gravity update"""
-        self._run_pihole_command(['sudo', 'pihole', '-g'], 'gravity update')
+        self._run_process_command(
+            command=['sudo', 'pihole', '-g'],
+            operation='gravity update'
+        )
 
     def update_pihole(self) -> None:
         """Execute Pi-hole update"""
-        self._run_pihole_command(['sudo', 'pihole', '-up'], 'Pi-hole update')
+        self._run_process_command(
+            command=['sudo', 'pihole', '-up'],
+            operation='Pi-hole update'
+        )
 
     def update_padd(self) -> None:
         """Check and update PADD if needed"""
@@ -151,65 +173,46 @@ class PiHole:
         try:
             print("\n    Checking PADD for updates...")
 
-            process = subprocess.Popen(
-                ['git', 'fetch'],
+            # Fetch updates without finishing
+            fetch_result = self._run_process_command(
+                command=['git', 'fetch'],
+                operation='git fetch',
                 cwd=str(padd_dir),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                universal_newlines=True
+                finish=False
             )
 
-            process.wait()
+            if fetch_result != 0:
+                logger.error("Failed to fetch PADD updates")
+                print("\n    Failed to fetch PADD updates")
+                return
 
-            process = subprocess.Popen(
-                ['git', 'status', '-uno'],
+            # Check status without finishing
+            status_result = self._run_process_command(
+                command=['git', 'status', '-uno'],
+                operation='check PADD status',
                 cwd=str(padd_dir),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                universal_newlines=True
+                finish=False
             )
 
-            status_output = ""
-            while process.poll() is None:
-                line = process.stdout.readline()
-                if line:
-                    status_output += line
-                    print(line.rstrip())
-
-            if "Your branch is behind" in status_output:
+            if "Your branch is behind" in str(status_result):
                 print("\n    Updates available. Updating PADD...")
 
-                process = subprocess.Popen(
-                    ['git', 'pull'],
+                # Pull changes and finish
+                self._run_process_command(
+                    command=['git', 'pull'],
+                    operation='update PADD',
                     cwd=str(padd_dir),
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    universal_newlines=True
+                    finish=True
                 )
-
-                while process.poll() is None:
-                    line = process.stdout.readline()
-                    if line:
-                        print(line.rstrip())
-
-                if process.returncode == 0:
-                    logger.info("PADD updated successfully")
-                    print("\nPADD updated successfully")
-                else:
-                    logger.error("PADD update failed")
-                    print("\nPADD update failed")
             else:
                 logger.info("PADD is already up to date")
-                print("\nPADD is already up to date")
+                print("\n    PADD is already up to date")
+                time.sleep(FEEDBACK_DELAY)
+                self.display.switch_to_padd()
 
-        except subprocess.SubprocessError as e:
+        except Exception as e:
             logger.error(f"Failed to update PADD: {str(e)}")
-            print(f"\nError: Failed to update PADD: {str(e)}")
-            raise ServiceError(f"Failed to update PADD: {str(e)}")
-        finally:
+            print(f"\n    Error: Failed to update PADD: {str(e)}")
             time.sleep(FEEDBACK_DELAY)
             self.display.switch_to_padd()
 

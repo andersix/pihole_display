@@ -73,7 +73,7 @@ class SystemOps:
     def update_system(self) -> None:
         """Execute system update"""
         self._run_system_command(
-            ['sudo', 'apt-get', 'update', '&&', 'sudo', 'apt-get', '-y', 'full-upgrade'],
+            ['sudo', 'apt', 'update', '&&', 'sudo', 'apt', '-y', 'full-upgrade'],
             'system update'
         )
 

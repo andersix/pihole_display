@@ -18,10 +18,10 @@ class DisplayManager:
     def __init__(self):
         """
         Initialize display manager with TMux controller.
-        One tmux window for PADD, one for the PiHole update
+        One tmux window for PADD, one for the PiHole menus
         """
         self.tmux = TMuxController()
-        self.backlight = None  # Will be set by ButtonManager
+        self.backlight = None  # set by ButtonManager
         self._previous_brightness = 1.0
         config = Config().display['tmux']
         self.session_name = config['session_name']
@@ -55,13 +55,13 @@ class DisplayManager:
             logger.error(f"Error checking PADD session: {e}")
             return False
 
-    def show_update_selection(self) -> bool:
+    def show_pihole_menu(self) -> bool:
         """
-        Show update selection screen
+        Show pihole menu selection screen
         Returns: True if display switched successfully
         """
         try:
-            logger.debug("Switching to control window for update selection")
+            logger.debug("Switching to control window for pihole menu")
             self.tmux.switch_window(self.control_window)
 
             # Set display to full brightness
@@ -71,16 +71,20 @@ class DisplayManager:
 
             self._clear_screen()
 
-            print("    +--------------------------------+")
-            print("    |       PiHole Update Menu       |")
-            print("    +--------------------------------+")
-            print("\n    Button 2: Update Gravity")
-            print("    - Updates blocklists")
-            print("\n    Button 3: Update Pi-hole")
-            print("    - Updates core software")
-            print("\n    Button 4: Update PADD")
-            print("    - Updates dashboard code")
-            print("\n    Waiting 30s for selection")
+            print("    +---------------------------------+")
+            print("    |       Pi-Hole Update Menu       |")
+            print("    +---------------------------------+")
+            print("\n")
+            print("    Button 2: Update Gravity")
+            print("    - press to update blocklists")
+            print("\n")
+            print("    Button 3: Update Pi-hole")
+            print("    - press to update core software")
+            print("\n")
+            print("    Button 4: Update PADD")
+            print("    - press to update dashboard code")
+            print("\n")
+            print("    Waiting 30s for selection")
             print("    Any other button cancels")
 
             return True
@@ -108,14 +112,17 @@ class DisplayManager:
             print("    +--------------------------------+")
             print("    |      System Control Menu       |")
             print("    +--------------------------------+")
-            print("\n    WARNING: System or Power state change!")
-            print("\n    Button 2: Update System")
-            print("    - Updates RPi OS and system packages")
-            print("\n    Button 3: Restart System")
-            print("    - System will reboot")
-            print("\n    Button 4: Shutdown System")
-            print("    - System will power off")
-            print("\n    Waiting 30s for selection...")
+            print("\n")
+            print("    Button 2: Update System")
+            print("    - press to update RPi OS and system packages")
+            print("\n")
+            print("    Button 3: Restart System")
+            print("    - press to reboot")
+            print("\n")
+            print("    Button 4: Shutdown System")
+            print("    - press to shutdown, then power off")
+            print("\n")
+            print("    Waiting 30s for selection...")
             print("    Any other button cancels")
 
             return True

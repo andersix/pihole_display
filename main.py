@@ -10,7 +10,7 @@ from src.display.manager import DisplayManager
 logger = logging.getLogger('DisplayController')
 
 def main():
-    """PiHole Display Main application entry point"""
+    """PiHole Display Main"""
     try:
         # Initialize configuration
         config = Config()
@@ -26,9 +26,22 @@ def main():
             logger.error("Failed to find PADD display session")
             return
 
+        def button1_held(hold_time: float):
+            """Handle button 1 hold - system control selection"""
+            if not manager.system._waiting_for_confirmation and not manager.pihole._waiting_for_confirmation:
+                logger.debug("Selected System Menu")
+                manager.system.handle_button1_held(hold_time)
+
+        def button2_held(hold_time: float):
+            """Handle button 2 hold - update selection"""
+            if not manager.system._waiting_for_confirmation and not manager.pihole._waiting_for_confirmation:
+                logger.debug("Selected Pi-Hole Menu")
+                manager.pihole.handle_button2_held(hold_time)
+
         def button1_pressed():
-            """Handle button 1 press - cycles LCD brightness"""
+            """Handle button 1 press - cycle brightness"""
             if manager.pihole._waiting_for_confirmation or manager.system._waiting_for_confirmation:
+                logger.debug("Button 1 pressed - cancelling confirmation")
                 manager.cancel_confirmation()
                 return
             try:
@@ -38,31 +51,18 @@ def main():
             except Exception as e:
                 logger.error(f"Error handling button 1 press: {str(e)}")
 
-        def button1_held(hold_time: float):
-            """Handle button 1 hold - system control request: reboot|shutdown """
-            if not manager.system._waiting_for_confirmation and not manager.pihole._waiting_for_confirmation:
-                manager.system.handle_button1_held(hold_time)
-
         def button2_pressed():
-            """
-            Handle button 2 press
-            - In Pi-hole menu: Confirms gravity update
-            - In system menu: Confirms system update
-            """
-            if manager.pihole._waiting_for_confirmation:
-                logger.debug("In Pi-hole menu - confirming gravity update")
-                manager.pihole.handle_button2_press()
-            elif manager.system._waiting_for_confirmation:
+            """Handle button 2 press - cancelling if in confirmation"""
+            if manager.system._waiting_for_confirmation:
                 logger.debug("In system menu - confirming system update")
                 manager.system.handle_button2_press()
-
-        def button2_held(hold_time: float):
-            """Handle button 2 hold - pihole update request"""
-            logger.debug(f"Button 2 held for {hold_time:.1f} seconds")
-            # Only proceed if not in any confirmation mode
-            if not manager.system._waiting_for_confirmation and not manager.pihole._waiting_for_confirmation:
-                logger.debug("Starting update selection")
-                manager.pihole.handle_button2_held(hold_time)
+            elif manager.pihole._waiting_for_confirmation:
+                logger.debug("In Pi-hole menu - confirming Gravity update")
+                manager.pihole.handle_button2_press()
+#            if manager.pihole._waiting_for_confirmation or manager.system._waiting_for_confirmation:
+#                logger.debug("Button 2 pressed - cancelling confirmation")
+#                manager.cancel_confirmation()
+#                return
 
         def button3_pressed():
             """
