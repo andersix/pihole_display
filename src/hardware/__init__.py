@@ -1,3 +1,4 @@
 from .button import ButtonHandler
+from .models import ButtonConfig
 
-__all__ = ['ButtonHandler']
+__all__ = ['ButtonHandler', 'ButtonConfig']

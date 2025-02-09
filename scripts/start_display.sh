@@ -1,15 +1,14 @@
 #!/bin/bash
 
-# Log the startup:
+# Log startup:
 LOG_FILE="/home/pi/pihole_display/log/startup.log"
 mkdir -p "$(dirname "$LOG_FILE")"
 
-# logging message function
 log_msg() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
 
-# check session health function
+# check tmux session
 check_session_health() {
     if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
         log_msg "ERROR: Tmux session lost"
@@ -56,12 +55,14 @@ if [ "$TERM" == "linux" ] ; then
     fi
 
     log_msg "Configuration values:"
-    log_msg "- SESSION_NAME:   $SESSION_NAME"
-    log_msg "- PADD_WINDOW:    $PADD_WINDOW"
-    log_msg "- CONTROL_WINDOW: $CONTROL_WINDOW"
-    log_msg "- PADD_SCRIPT:    $PADD_SCRIPT"
-    log_msg "- PYTHON_PATH:    $PYTHON_PATH"
-    log_msg "- MAIN_SCRIPT:    $MAIN_SCRIPT"
+    log_msg "- tmux:"
+    log_msg "  - SESSION_NAME:   $SESSION_NAME"
+    log_msg "  - PADD_WINDOW:    $PADD_WINDOW"
+    log_msg "  - CONTROL_WINDOW: $CONTROL_WINDOW"
+    log_msg "- paths:"
+    log_msg "  - PADD_SCRIPT:    $PADD_SCRIPT"
+    log_msg "  - PYTHON_PATH:    $PYTHON_PATH"
+    log_msg "  - MAIN_SCRIPT:    $MAIN_SCRIPT"
 
     # Verify files exist
     if [ -f "$PADD_SCRIPT" ]; then
@@ -87,7 +88,7 @@ if [ "$TERM" == "linux" ] ; then
     if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
         log_msg "Creating new tmux session"
         
-        # Create new session with first window running PADD
+        # Create new tmux session with first window running PADD
         tmux new-session -d -s "$SESSION_NAME" -n "$PADD_WINDOW" "$PADD_SCRIPT"
         PADD_WINDOW_CREATED=$?
         log_msg "PADD window creation status: $PADD_WINDOW_CREATED"
@@ -100,15 +101,15 @@ if [ "$TERM" == "linux" ] ; then
         # Wait for session to be fully created
         sleep 2
         
-        # Verify session exists
+        # Verify tmux session exists
         if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
             log_msg "Session created successfully"
             
-            # Disable status line
+            # Disable tmux status line
             tmux set-option -t "$SESSION_NAME" status off
             sleep 1
             
-            # Create second window and send command
+            # Create second tmux window and send command
             log_msg "Creating control window"
             tmux new-window -t "$SESSION_NAME:1" -n "$CONTROL_WINDOW"
             CONTROL_WINDOW_CREATED=$?
@@ -139,17 +140,17 @@ if [ "$TERM" == "linux" ] ; then
                 exit 1
             fi
             
-            # Verify session health
+            # Verify tmux session health
             if ! check_session_health; then
                 log_msg "ERROR: Session health check failed"
                 exit 1
             fi
             
-            # Select PADD window as default
+            # Select PADD tmux window as default
             sleep 1
             tmux select-window -t "$SESSION_NAME:$PADD_WINDOW"
             
-            # List windows to verify creation
+            # List tmux windows to verify creation
             log_msg "Current tmux windows:"
             tmux list-windows -t "$SESSION_NAME" >> "$LOG_FILE" 2>&1
         else
@@ -158,14 +159,14 @@ if [ "$TERM" == "linux" ] ; then
         fi
     else
         log_msg "Session already exists"
-        # Verify existing session health
+        # Verify existing tmux session health
         if ! check_session_health; then
             log_msg "ERROR: Existing session health check failed"
             exit 1
         fi
     fi
     
-    # Attach to session if we're on tty1
+    # Attach to tmux session if we're on tty1
     if [ "$(tty)" == "/dev/tty1" ]; then
         log_msg "Attaching to tmux session"
         exec tmux attach-session -t "$SESSION_NAME"

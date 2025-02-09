@@ -6,14 +6,14 @@ from gpiozero import Button as GPIOButton
 from gpiozero.exc import GPIOZeroError
 import logging
 from ..utils.exceptions import ButtonError
-from ..models import ButtonConfig
+from .models import ButtonConfig
 
 logger = logging.getLogger('DisplayController')
 
 class ButtonHandler:
     """
     A class to handle button input using gpiozero Button
-    
+
     This class provides a wrapper around GPIOZero's Button class,
     adding support for hold duration tracking and custom callbacks.
     """
@@ -24,7 +24,7 @@ class ButtonHandler:
                  hold_callback: Optional[Callable[[float], None]] = None):
         """
         Initialize the button handler.
-        
+
         Args:
             config: ButtonConfig object containing pin and setup information
             callback: Optional function to call when button is pressed
@@ -32,9 +32,9 @@ class ButtonHandler:
         """
         try:
             self._hold_start: Optional[float] = None
-            self._press_handled = False  # Track if press was handled
+            self._press_handled = False
             self.function = config.function
-            
+
             self.button = GPIOButton(
                 pin=config.pin,
                 pull_up=config.pull_up,
@@ -57,7 +57,7 @@ class ButtonHandler:
                         hold_callback: Optional[Callable[[float], None]]) -> None:
         """
         Set up button callbacks
-        
+
         Args:
             press_callback: Function to call on button press
             hold_callback: Function to call on button release after hold
@@ -71,7 +71,7 @@ class ButtonHandler:
                 self._hold_start = time.time()
                 self._press_handled = False
                 logger.debug(f"{self.function} button pressed at {self._hold_start}")
-                
+
                 # If this is a button that can handle both press and hold,
                 # we'll wait to see if it's a hold before executing press
                 if not self._hold_callback:

@@ -1,11 +1,10 @@
 # vim:tabstop=4:softtabstop=4:shiftwidth=4:textwidth=79:expandtab:autoindent:smartindent:fileformat=unix:
 
-from typing import List, Callable, Optional
 import logging
+from typing import List, Callable, Optional
 from ..utils.exceptions import ButtonError
 from ..utils.config import Config
-from ..models import ButtonConfig
-from ..hardware.button import ButtonHandler
+from ..hardware import ButtonConfig, ButtonHandler
 from ..display.backlight import DisplayBacklight
 from ..services.pihole import PiHole
 from ..services.system import SystemOps

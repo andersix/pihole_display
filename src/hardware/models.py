@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 from typing import Optional
-from .utils.constants import ButtonFunction
-from .utils.exceptions import ConfigError
+from ..utils.constants import ButtonFunction  # Changed from .utils to ..utils
+from ..utils.exceptions import ConfigError   # Changed from .utils to ..utils
 
 @dataclass
 class ButtonConfig:
@@ -20,10 +20,9 @@ class ButtonConfig:
         Validate configuration after initialization
         
         Raises:
-            ConfigError: If button configuration is invalid
+            ConfigError: If button function is invalid
         """
         try:
-            # Validate button function is defined in configuration
             ButtonFunction(self.function)
         except ValueError:
             valid_functions = [f.value for f in ButtonFunction]
@@ -36,11 +35,9 @@ class ButtonConfig:
         if not isinstance(self.pin, int) or self.pin < 0:
             raise ConfigError(f"Pin must be a positive integer, got {self.pin}")
         
-        # Validate bounce time is positive
         if self.bounce_time <= 0:
             raise ConfigError(f"Bounce time must be positive, got {self.bounce_time}")
         
-        # Validate hold time if specified
         if self.hold_time is not None and self.hold_time < 0:
             raise ConfigError(f"Hold time cannot be negative, got {self.hold_time}")
 

@@ -21,7 +21,7 @@ class DisplayManager:
         One tmux window for PADD, one for the PiHole menus
         """
         self.tmux = TMuxController()
-        self.backlight = None  # set by ButtonManager
+        self.backlight = None
         self._previous_brightness = 1.0
         config = Config().display['tmux']
         self.session_name = config['session_name']
@@ -93,9 +93,9 @@ class DisplayManager:
             logger.error(f"Error showing update selection: {e}")
             return False
 
-    def show_system_control(self) -> bool:
+    def show_system_menu(self) -> bool:
         """
-        Show system control options
+        Show system control menu
         Returns: True if display switched successfully
         """
         try:
@@ -150,7 +150,7 @@ class DisplayManager:
             raise DisplayError(f"Failed to switch to PADD window: {e}")
 
     def _clear_screen(self) -> None:
-        """Clear screen and reset cursor position"""
+        """Clear the LCD screen and reset cursor position"""
         try:
             # Clear screen
             subprocess.run(['clear'], check=True)

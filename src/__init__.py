@@ -1,4 +1,4 @@
-from .models import ButtonConfig
+from .hardware import ButtonConfig
 from .controllers import ButtonManager
 from .display import DisplayBacklight, DisplayManager, TMuxController
 from .services import PiHole, SystemOps

@@ -61,7 +61,7 @@ class PiHole:
             time.sleep(FEEDBACK_DELAY)
             self.display.switch_to_padd()
 
-    def handle_button2_held(self, hold_time: float) -> None:
+    def show_menu(self, hold_time: float) -> None:
         """Handle button 2 hold event for showing Pi-Hole menu"""
         logger.info(f"Button 2 held for {hold_time:.1f} seconds")
 
@@ -73,7 +73,7 @@ class PiHole:
                 logger.error("Failed to show pihole menu screen")
                 self.cancel_update()
 
-    def handle_button2_press(self) -> None:
+    def request_gravity_update(self) -> None:
         """Handle button 2 press for gravity update confirmation"""
         if self._waiting_for_confirmation:
             print("    Gravity update selected\n")
@@ -81,7 +81,7 @@ class PiHole:
             self._clear_confirmation_state()
             self.update_gravity()
 
-    def handle_button3_press(self) -> None:
+    def request_pihole_update(self) -> None:
         """Handle button 3 press for pihole update confirmation"""
         if self._waiting_for_confirmation:
             print("    Pi-hole update selected\n")
@@ -89,7 +89,7 @@ class PiHole:
             self._clear_confirmation_state()
             self.update_pihole()
 
-    def handle_button4_press(self) -> None:
+    def request_padd_update(self) -> None:
         """Handle button 4 press for PADD update confirmation"""
         if self._waiting_for_confirmation:
             print("    PADD update selected\n")
