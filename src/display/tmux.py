@@ -2,10 +2,10 @@
 
 import subprocess
 import logging
-from pathlib import Path
+from pathlib            import Path
 from ..utils.exceptions import DisplayError
-from ..utils.constants import PATHS
-from ..utils.config import Config
+from ..utils.constants  import PATHS
+from ..utils.config     import Config
 
 logger = logging.getLogger('DisplayController')
 

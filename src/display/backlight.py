@@ -4,7 +4,7 @@ import time
 import pigpio
 import logging
 from ..utils.exceptions import BacklightError
-from ..utils.config import Config
+from ..utils.config     import Config
 
 logger = logging.getLogger('DisplayController')
 

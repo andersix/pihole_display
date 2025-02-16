@@ -2,16 +2,16 @@
 
 import subprocess
 import logging
-from threading import Timer
 import time
-from typing import Optional, Tuple
+from threading import Timer
+from typing    import Optional, Tuple
 from ..utils.exceptions import ServiceError
-from ..utils.constants import (
+from ..utils.constants  import (
     CONFIRMATION_TIMEOUT,
     FEEDBACK_DELAY,
     SYSTEM_CONTROL_HOLD
 )
-from ..display.manager import DisplayManager
+from ..display.manager  import DisplayManager
 
 logger = logging.getLogger('DisplayController')
 

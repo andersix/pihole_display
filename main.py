@@ -2,15 +2,16 @@
 
 import signal
 import logging
-from src.utils.config import Config
-from src.hardware import ButtonConfig
+
+from src.utils.config               import Config
+from src.hardware                   import ButtonConfig
 from src.controllers.button_manager import ButtonManager
-from src.display.manager import DisplayManager
+from src.display.manager            import DisplayManager
 
 logger = logging.getLogger('DisplayController')
 
 def main():
-    """PiHole Display Main"""
+    """Pi-Hole Display Main"""
     try:
         # Initialize configuration
         config = Config()
@@ -59,10 +60,6 @@ def main():
             elif manager.pihole._waiting_for_confirmation:
                 logger.debug("In Pi-hole menu - confirming Gravity update")
                 manager.pihole.request_gravity_update()
-#            if manager.pihole._waiting_for_confirmation or manager.system._waiting_for_confirmation:
-#                logger.debug("Button 2 pressed - cancelling confirmation")
-#                manager.cancel_confirmation()
-#                return
 
         def button3_pressed():
             """

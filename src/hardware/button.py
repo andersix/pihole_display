@@ -1,12 +1,12 @@
 # vim:tabstop=4:softtabstop=4:shiftwidth=4:textwidth=79:expandtab:autoindent:smartindent:fileformat=unix:
 
 import time
-from typing import Callable, Optional
-from gpiozero import Button as GPIOButton
-from gpiozero.exc import GPIOZeroError
 import logging
+from typing             import Callable, Optional
+from gpiozero           import Button as GPIOButton
+from gpiozero.exc       import GPIOZeroError
 from ..utils.exceptions import ButtonError
-from .models import ButtonConfig
+from .models            import ButtonConfig
 
 logger = logging.getLogger('DisplayController')
 

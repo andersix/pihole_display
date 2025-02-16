@@ -1,8 +1,8 @@
 # vim:tabstop=4:softtabstop=4:shiftwidth=4:textwidth=79:expandtab:autoindent:smartindent:fileformat=unix:
 
-from dataclasses import dataclass
-from typing import Optional
-from ..utils.constants import ButtonFunction  # Changed from .utils to ..utils
+from dataclasses        import dataclass
+from typing             import Optional
+from ..utils.constants  import ButtonFunction  # Changed from .utils to ..utils
 from ..utils.exceptions import ConfigError   # Changed from .utils to ..utils
 
 @dataclass

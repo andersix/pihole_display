@@ -3,9 +3,9 @@
 import yaml
 import logging
 from logging.handlers import RotatingFileHandler
-from pathlib import Path
-from typing import Any, Dict
-from .exceptions import ConfigError
+from pathlib          import Path
+from typing           import Any, Dict
+from .exceptions      import ConfigError
 
 class Config:
     """Configuration handler for PiHole Display"""

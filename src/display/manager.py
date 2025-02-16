@@ -3,12 +3,12 @@
 import subprocess
 import time
 import logging
-from typing import Optional
-from pathlib import Path
+from typing             import Optional
+from pathlib            import Path
 from ..utils.exceptions import DisplayError
-from ..utils.config import Config
-from .tmux import TMuxController
-from .backlight import DisplayBacklight
+from ..utils.config     import Config
+from .tmux              import TMuxController
+from .backlight         import DisplayBacklight
 
 logger = logging.getLogger('DisplayController')
 

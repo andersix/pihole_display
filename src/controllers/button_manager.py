@@ -1,14 +1,14 @@
 # vim:tabstop=4:softtabstop=4:shiftwidth=4:textwidth=79:expandtab:autoindent:smartindent:fileformat=unix:
 
 import logging
-from typing import List, Callable, Optional
-from ..utils.exceptions import ButtonError
-from ..utils.config import Config
-from ..hardware import ButtonConfig, ButtonHandler
+from typing              import List, Callable, Optional
+from ..utils.exceptions  import ButtonError
+from ..utils.config      import Config
+from ..hardware          import ButtonConfig, ButtonHandler
 from ..display.backlight import DisplayBacklight
-from ..services.pihole import PiHole
-from ..services.system import SystemOps
-from ..display.manager import DisplayManager
+from ..services.pihole   import PiHole
+from ..services.system   import SystemOps
+from ..display.manager   import DisplayManager
 
 logger = logging.getLogger('DisplayController')
 

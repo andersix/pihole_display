@@ -3,17 +3,20 @@
 import subprocess
 import time
 import logging
+
 from threading import Timer
-from typing import Optional
-from pathlib import Path
+from typing    import Optional
+from pathlib   import Path
+
 from ..utils.exceptions import ServiceError
-from ..utils.constants import (
+from ..utils.constants  import (
     CONFIRMATION_TIMEOUT,
     FEEDBACK_DELAY,
     PATHS,
     UPDATE_SELECT_HOLD
 )
-from ..display.manager import DisplayManager
+
+from ..display.manager  import DisplayManager
 
 logger = logging.getLogger('DisplayController')
 

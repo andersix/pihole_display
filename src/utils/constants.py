@@ -1,6 +1,6 @@
 # vim:tabstop=4:softtabstop=4:shiftwidth=4:textwidth=79:expandtab:autoindent:smartindent:fileformat=unix:
 
-from enum import Enum
+from enum    import Enum
 from .config import Config
 
 # Load configuration

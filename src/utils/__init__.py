@@ -1,5 +1,5 @@
-from .config import Config
-from .constants import ButtonFunction, CONFIRMATION_TIMEOUT, FEEDBACK_DELAY
+from .config     import Config
+from .constants  import ButtonFunction, CONFIRMATION_TIMEOUT, FEEDBACK_DELAY
 from .exceptions import (
     PiHoleDisplayError,
     DisplayError,
