@@ -1,0 +1,3 @@
+[submodule "PADD"]
+	path = PADD
+	url = https://github.com/pi-hole/PADD.git
