@@ -425,12 +425,10 @@ When there are updates to this project:
 cd ~/pihole_display
 git pull
 git submodule update --remote --merge  # Update PADD submodule
-
-# Restart the application by killing the tmux session
-tmux kill-session -t display
-# Then manually run the startup script or reboot
-/home/pi/pihole_display/scripts/start_display.sh
+sudo reboot
 ```
+
+The reboot will automatically start the updated application via the `.bashrc` startup script.
 
 ### Update History
 
