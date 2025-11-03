@@ -161,6 +161,8 @@ The menu times out after 30 seconds.
 
 * tmux
 
+* yq (YAML parser for reading configuration files)
+
 * Adafruit Raspberry Pi Installer scripts
   - https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi
 
@@ -197,10 +199,12 @@ If you don't have pip3, install it with
 sudo apt install python3-pip
 ```
 
-#### Git and tmux
-Install git and tmux:
+#### Git, tmux, and yq
+Install git, tmux, and yq:
 ```
 sudo apt install git tmux
+sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_arm -O /usr/bin/yq
+sudo chmod +x /usr/bin/yq
 ```
 
 #### Get pihole_display (this repository)
