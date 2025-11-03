@@ -1,16 +1,12 @@
 # Pi-hole Display
 
 ## Introduction
-The Pi-hole Display Controller is a Python application designed to run on a Raspberry Pi with an attached LCD display. It provides a user interface for monitoring Pi-hole statistics and performing system maintenance tasks through physical button controls. The application works in conjunction with the Pi-hole Admin Display Dashboard (PADD, included as a git submodule) to provide both visual feedback and control capabilities.
 
+The Pi-hole Display Controller is a Python application designed to run on a Raspberry Pi with an attached LCD display. It provides a user interface for monitoring Pi-hole statistics and performing system maintenance tasks through physical button controls.
 
-This is a python module and companion systemd service file,
-performing useful functions using the four built-in buttons
-on the PiTFT 2.8" Plus 320x240 TFT display panel PCB.
+The application works in conjunction with the Pi-hole Admin Display Dashboard (PADD, included as a git submodule) to provide both visual feedback and control capabilities. It uses the four built-in buttons on the PiTFT 2.8" Plus 320x240 TFT display for functions like dimming the display, updating Pi-hole, and shutting down the system for maintenance.
 
-I use this display on a running Pi-Hole to display the Pi-Hole status.
-The buttons are used for things like dimming the display, updating, and
-restarting or shuting down the Pi for maintenance, etc.
+The application starts automatically on boot using a startup script called from `.bashrc`.
 
 <img src="doc/img/PiHole_TFT_buttons.jpg" style=" width:480px; " >
 
@@ -301,9 +297,39 @@ and go select the following options to get Terminus 6x12
 * Font size:
   - 6x12 (framebuffer only)
 
+#### Install Python Dependencies
+
+Install the required Python packages:
+```bash
+cd ~/pihole_display
+sudo pip3 install -r requirements.txt
+```
+
+#### Add User to Pi-hole Group
+
+Pi-hole requires authentication for PADD. Add your user to the pihole group:
+```bash
+sudo usermod -G pihole pi
+```
+
+See https://github.com/pi-hole/PADD?tab=readme-ov-file#authentication for details and other options.
+
+#### Verify pigpiod is Running
+
+The pigpio daemon should already be running from the earlier setup step. Verify it:
+```bash
+sudo systemctl status pigpiod
+```
+
+If not running, start it:
+```bash
+sudo systemctl enable pigpiod
+sudo systemctl start pigpiod
+```
+
 #### Configure Display Controller to Start at Boot
 
-**Important:** This assumes your Raspberry Pi is configured for auto-login on boot.
+**Important:** This assumes your Raspberry Pi is configured for auto-login on boot (configured earlier).
 
 Edit the pi user's `~/.bashrc` and add the following code **at the very top** of the file:
 
@@ -325,48 +351,17 @@ This startup script (`scripts/start_display.sh`) automatically:
 - Logs startup details to `log/startup.log`
 
 **Note:** If you want to customize the PADD location, edit `config/config.yaml` and update the `paths.padd_dir` and `paths.padd_script` settings.
-## add user to pihole group
-The new pihole requires authentication. I opted to add the pihole display user, "pi" in my case, to the pihole group.
-See `https://github.com/pi-hole/PADD?tab=readme-ov-file#authentication` for details and other options.
-```
-# Add the pihole user to the pihole group:
-$ whoami
-pi
-$ sudo usermod -G pihole pi
-```
 
-#### Reboot and return to here
-After this reboot, the dipslay should show the PADD status screen for your PiHole.
+#### Final Reboot
 
-Now let's get the buttons code working:
-
-#### Install Python dependencies
-```bash
-cd ~/pihole_display
-sudo pip3 install -r requirements.txt
-```
-
-#### Verify pigpiod is running
-The pigpio daemon should already be running from the earlier setup step. Verify it:
-```bash
-sudo systemctl status pigpiod
-```
-
-If not running, start it:
-```bash
-sudo systemctl enable pigpiod
-sudo systemctl start pigpiod
-```
-
-#### Reboot to start the display controller
-After adding the startup code to `.bashrc`, reboot your Pi:
+Reboot your Pi to start the display controller:
 ```bash
 sudo reboot
 ```
 
-The display controller should automatically start on boot, create the tmux session, launch PADD, and activate button control.
+After reboot, the display should show the PADD status screen for your Pi-hole, and the buttons should be working as described earlier.
 
-That's it! The buttons should be working as described above. If you have issues, see the Troubleshooting section.
+That's it! If you have issues, see the Troubleshooting section below.
 
 ## Troubleshooting
 
