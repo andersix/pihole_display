@@ -4,7 +4,7 @@
 
 The Pi-hole Display Controller is a Python application designed to run on a Raspberry Pi with an attached LCD display. It provides a user interface for monitoring Pi-hole statistics and performing system maintenance tasks through physical button controls.
 
-The application works in conjunction with the Pi-hole Admin Display Dashboard (PADD, included as a git submodule) to provide both visual feedback and control capabilities. It uses the four built-in buttons on the PiTFT 2.8" Plus 320x240 TFT display for functions like dimming the display, updating Pi-hole, and shutting down the system for maintenance.
+The application works in conjunction with the Pi-hole Admin Display Dashboard (PADD) to provide both visual feedback and control capabilities. It uses the four built-in buttons on the PiTFT 2.8" Plus 320x240 TFT display for functions like dimming the display, updating Pi-hole, and shutting down the system for maintenance.
 
 The application starts automatically on boot using a startup script called from `.bashrc`.
 
@@ -14,7 +14,7 @@ The application starts automatically on boot using a startup script called from 
 
 The PiTFT 2.8" display has four buttons on the side. The application uses a **menu-based system** where buttons have different functions depending on the current mode:
 
-- **Normal mode**: Displays PADD (Pi-hole statistics)
+- **Normal mode**: Displays PADD
 - **Pi-Hole Update Menu**: Triggered by holding Button 1
 - **System Control Menu**: Triggered by holding Button 2
 
@@ -36,17 +36,17 @@ The PiTFT 2.8" display has four buttons on the side. The application uses a **me
 
 ## Normal Mode (PADD Display)
 
-When the display shows PADD (Pi-hole statistics):
+When the display shows PADD:
 
 **Button 1** - Brightness & Menu
-- **Press**: Dim the display (cycles through brightness levels, including off)
+- **Press**: Dim the display
 - **Hold 2 seconds**: Open the **Pi-Hole Update Menu**
 
 **Button 2** - System Menu
 - **Hold 2 seconds**: Open the **System Control Menu**
 
 **Buttons 3 & 4**
-- Not used in normal mode (used for menu selections)
+- Not used in normal mode
 
 ---
 
@@ -138,7 +138,7 @@ The menu times out after 30 seconds.
 * A Raspberry Pi (tested on a model 3B and 3B+)
 
 * Display and enclosure---modify/customize enclosure as you prefer, this is what I did:
-  - Adafruit PiTFT Plus 320x240 2.8" TFT (assembled with four buttons on the side.)
+  - Adafruit PiTFT Plus 320x240 2.8" TFT
     - https://www.adafruit.com/product/2423
   - Faceplate and Buttons Pack for 2.8" PiTFTs
     - https://www.adafruit.com/product/2807
@@ -159,7 +159,7 @@ The menu times out after 30 seconds.
 
 * git
 
-* tmux (required for managing display windows)
+* tmux
 
 * Adafruit Raspberry Pi Installer scripts
   - https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi
