@@ -449,3 +449,9 @@ The reboot will automatically start the updated application via the `.bashrc` st
 ## Modifications and Improvements
 
 Submit pull requests. Go for it. You can do it.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This project uses Pi-hole, which is separately licensed under the EUPL v1.2.
