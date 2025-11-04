@@ -1,11 +1,16 @@
 # Display settings
 display:
   backlight:
-    pin: 18
-    pwm_frequency: 240
-    gamma: 1.5
-    retry_attempts: 3
-    brightness_levels: [1.0, 0.857, 0.714, 0.571, 0.429, 0.286, 0.143, 0.0]
+    pin: 18  # GPIO pin for backlight control (must support hardware PWM)
+    pwm_frequency: 240  # PWM frequency in Hz (used by hardware_PWM)
+    gamma: 1.8  # Gamma correction for LED brightness perception (1.0 = linear, 2.2 = typical)
+    retry_attempts: 3  # Number of initialization attempts before failing
+
+    # Brightness levels: raw values 0.0-1.0 in descending order, and pre-gamma corrected,
+    # where 1.0 is 100% on, and 0.0 is 0%, or completely off.
+    # Pressing button 1 cycles through levels.
+    brightness_levels: [1.0, 0.850, 0.710, 0.570, 0.430, 0.290, 0.110, 0.0]
+
   tmux:
     session_name: 'display'
     padd_window: 'padd'

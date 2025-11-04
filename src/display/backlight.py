@@ -22,10 +22,37 @@ class DisplayBacklight:
         self.current_step = 0
         self.pi = None
 
-        # Get brightness levels from config
+        # Get and validate brightness levels from config
         self.brightness_levels = config['brightness_levels']
+        self._validate_brightness_levels()
 
         self._initialize_pwm()
+
+    def _validate_brightness_levels(self) -> None:
+        """Validate brightness levels configuration"""
+        if not self.brightness_levels:
+            raise BacklightError("brightness_levels cannot be empty")
+
+        if len(self.brightness_levels) < 2:
+            raise BacklightError("brightness_levels must have at least 2 levels")
+
+        # Check all values are in range [0.0, 1.0]
+        for i, level in enumerate(self.brightness_levels):
+            if not isinstance(level, (int, float)):
+                raise BacklightError(f"brightness_levels[{i}] must be numeric, got {type(level)}")
+            if not 0.0 <= level <= 1.0:
+                raise BacklightError(f"brightness_levels[{i}] = {level}, must be between 0.0 and 1.0")
+
+        # Check descending order
+        for i in range(len(self.brightness_levels) - 1):
+            if self.brightness_levels[i] < self.brightness_levels[i + 1]:
+                raise BacklightError("brightness_levels must be in descending order")
+
+        # Warn if first level is not 1.0 (full brightness)
+        if self.brightness_levels[0] != 1.0:
+            logger.warning(f"brightness_levels[0] = {self.brightness_levels[0]}, recommended to start at 1.0 for full brightness")
+
+        logger.info(f"Brightness levels validated: {len(self.brightness_levels)} levels")
 
     def _initialize_pwm(self) -> None:
         """Initialize pigpio PWM with retry logic"""
@@ -39,10 +66,7 @@ class DisplayBacklight:
                 # Set up pin as output
                 self.pi.set_mode(self.pin, pigpio.OUTPUT)
 
-                # Set PWM frequency
-                self.pi.set_PWM_frequency(self.pin, self.pwmf)
-
-                # Start at full brightness
+                # Start at full brightness (hardware_PWM frequency set in each call)
                 self.set_brightness(self.brightness_levels[0])
                 logger.info("PWM initialization successful")
                 break
@@ -54,26 +78,23 @@ class DisplayBacklight:
 
     def _pwm_brightness_value(self, value: float) -> int:
         """
-        normalize brightness value (0-1) to hardware PWM value (0-255)
-        Applies gamma correction
+        Normalize brightness value (0-1) to hardware PWM dutycycle (0-1000000)
+        Applies gamma correction for perceptual linearity
         """
         if value == 0:
             return 0
         gamma_corrected = pow(value, self.gamma)
-        return min(255, max(0, int(gamma_corrected * 255)))
+        return min(1000000, max(0, int(gamma_corrected * 1000000)))
 
-    #
-    # TODO : look into using pi.hardware_PWM instead of set pwm dutycycle
-    #
     def set_brightness(self, raw_value: float) -> None:
-        """Set brightness with gamma correction and value conversion"""
+        """Set brightness using hardware PWM with gamma correction"""
         if not self.pi or not self.pi.connected:
             logger.error("Attempted to set brightness but PWM not initialized")
             raise BacklightError("PWM not initialized")
 
         try:
             hw_value = self._pwm_brightness_value(raw_value)
-            self.pi.set_PWM_dutycycle(self.pin, hw_value)
+            self.pi.hardware_PWM(self.pin, self.pwmf, hw_value)
             logger.debug(f"Set brightness raw:{raw_value:.3f} hw_value:{hw_value}")
         except Exception as e:
             logger.error(f"Failed to set brightness: {str(e)}")
@@ -109,7 +130,7 @@ class DisplayBacklight:
         if self.pi and self.pi.connected:
             try:
                 logger.info("Cleaning up PWM device")
-                self.pi.set_PWM_dutycycle(self.pin, 0)
+                self.pi.hardware_PWM(self.pin, 0, 0)
                 self.pi.stop()
             except Exception as e:
                 logger.error(f"Error during PWM cleanup: {str(e)}")

@@ -1,38 +1,44 @@
 .
 ├── config
 │   └── config.yaml
+├── doc
+│   └── img
+│       ├── PiHole_TFT_buttons.jpg
+│       ├── PiTFT_buttons_parts.jpg
+│       └── PiTFT_plugin.jpg
+├── LICENSE
 ├── main.py
+├── PADD
+│   ├── padd.sh
+│   └── README.md
 ├── README.md
 ├── requirements.txt
 ├── scripts
 │   ├── README.md
 │   └── start_display.sh
 ├── src
+│   ├── __init__.py
 │   ├── controllers
-│   │   ├── button_manager.py
-│   │   └── __init__.py
-│   ├── display
-│   │   ├── backlight.py
 │   │   ├── __init__.py
+│   │   └── button_manager.py
+│   ├── display
+│   │   ├── __init__.py
+│   │   ├── backlight.py
 │   │   ├── manager.py
 │   │   └── tmux.py
 │   ├── hardware
-│   │   ├── button.py
-│   │   ├── button.py.sav
 │   │   ├── __init__.py
-│   │   ├── models.py
-│   │   └── new.py
-│   ├── __init__.py
+│   │   ├── button.py
+│   │   └── models.py
 │   ├── services
 │   │   ├── __init__.py
 │   │   ├── pihole.py
 │   │   └── system.py
 │   └── utils
+│       ├── __init__.py
 │       ├── config.py
-│       ├── config.py.sav
 │       ├── constants.py
-│       ├── exceptions.py
-│       └── __init__.py
+│       └── exceptions.py
 └── structure.txt
 
-9 directories, 27 files
+12 directories, 30 files
