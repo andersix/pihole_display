@@ -12,24 +12,24 @@ The application starts automatically on boot using a startup script called from 
 
 ## How to Use the Buttons
 
-The PiTFT 2.8" display has four buttons on the side. The application uses a **menu-based system** where buttons have different functions depending on the current mode:
+The PiTFT 2.8" display has four buttons on the side used for various functions depending on mode:
 
-- **Normal mode**: Displays PADD
-- **Pi-Hole Update Menu**: Triggered by holding Button 1
-- **System Control Menu**: Triggered by holding Button 2
+- **Normal mode**: Displays PADD on display, dimmable with Button 1
+- **Pi-Hole Update Menu**: Displayed by holding Button 1
+- **System Control Menu**: Displayed by holding Button 2
 
 ### Button Layout (Top to Bottom)
 
 ```
-┌─────────────┐
-│  Button 1   │ ← Top button
-├─────────────┤
-│  Button 2   │
-├─────────────┤
-│  Button 3   │
-├─────────────┤
-│  Button 4   │ ← Bottom button
-└─────────────┘
+ ┌─────────────────────────┌─────────────┐
+ │ PI-HOLE =============== │  Button 1   │ ← Top button
+ │                         ├─────────────┤
+ │ STATS ================= │  Button 2   │
+ │                         ├─────────────┤
+ │ NETWORK =============== │  Button 3   │
+ │                         ├─────────────┤
+ │ SYSTEM ================ │  Button 4   │ ← Bottom button
+ └─────────────────────────└─────────────┘
 ```
 
 ---
@@ -40,10 +40,10 @@ When the display shows PADD:
 
 **Button 1** - Brightness & Menu
 - **Press**: Dim the display
-- **Hold 2 seconds**: Open the **Pi-Hole Update Menu**
+- **Hold 2 seconds**: Display the **Pi-Hole Update Menu**
 
 **Button 2** - System Menu
-- **Hold 2 seconds**: Open the **System Control Menu**
+- **Hold 2 seconds**: Display the **System Control Menu**
 
 **Buttons 3 & 4**
 - Not used in normal mode
@@ -124,7 +124,7 @@ The menu times out after 30 seconds.
 
 ---
 
-## Tips
+## Notes
 
 - When you enter a menu, the display automatically switches to full brightness
 - All operations show their progress on the display
