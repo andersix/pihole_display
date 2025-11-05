@@ -258,6 +258,8 @@ class PiHole:
             print(f"\n    Error: Failed to update Pi-hole: {str(e)}")
         finally:
             time.sleep(FEEDBACK_DELAY)
+            # Wait for FTL service to restart and PADD to recover
+            self._wait_for_ftl_recovery()
             self.display.switch_to_padd()
 
     def update_padd(self) -> None:
@@ -329,6 +331,52 @@ class PiHole:
             time.sleep(FEEDBACK_DELAY)
             self.display.switch_to_padd()
 
+    def _wait_for_ftl_recovery(self, max_wait: int = 30, check_interval: float = 2.0) -> None:
+        """
+        Wait for FTL service to come back online after Pi-hole update.
+
+        Pi-hole updates restart the FTL service, which can leave PADD in a bad state
+        showing "No connection to FTL!" errors. This method waits for FTL to be
+        responsive again before returning control to PADD.
+
+        Args:
+            max_wait: Maximum seconds to wait for FTL recovery
+            check_interval: Seconds between FTL availability checks
+        """
+        logger.info("Waiting for FTL service to recover after Pi-hole update")
+        print("\n    Waiting for FTL service to restart...")
+
+        start_time = time.time()
+        ftl_recovered = False
+
+        while (time.time() - start_time) < max_wait:
+            try:
+                # Check if FTL is responding using dig query (same method PADD uses)
+                result = subprocess.run(
+                    ['dig', '+short', '+time=1', '+tries=1', 'chaos', 'txt', 'local.api.ftl', '@localhost'],
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+
+                # If dig returns 0 and has output, FTL is responding
+                if result.returncode == 0 and result.stdout.strip():
+                    logger.info("FTL service recovered successfully")
+                    print("    FTL service is back online")
+                    ftl_recovered = True
+                    break
+
+            except (subprocess.SubprocessError, subprocess.TimeoutExpired):
+                pass  # FTL not ready yet, continue waiting
+
+            time.sleep(check_interval)
+
+        if not ftl_recovered:
+            logger.warning(f"FTL service did not recover within {max_wait} seconds")
+            print(f"    Warning: FTL may still be restarting")
+
+        # Give PADD one more refresh cycle to update its display
+        time.sleep(1)
 
     def cleanup(self) -> None:
         """Clean up PiHole resources"""

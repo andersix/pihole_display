@@ -133,9 +133,14 @@ class DisplayManager:
             return False
 
     def switch_to_padd(self) -> None:
-        """Switch to PADD window"""
+        """Switch to PADD window and force refresh"""
         try:
             logger.debug("Switching to PADD window")
+
+            # Force PADD to redraw by sending WINCH signal (window resize)
+            # This triggers PADD's TerminalResize handler to clear screen and refresh
+            self._refresh_padd_display()
+
             self.tmux.switch_window(self.padd_window)
             # Restore previous brightness
             if self.backlight:
@@ -149,6 +154,52 @@ class DisplayManager:
         except Exception as e:
             logger.error(f"Error switching to PADD window: {e}")
             raise DisplayError(f"Failed to switch to PADD window: {e}")
+
+    def _refresh_padd_display(self) -> None:
+        """
+        Force PADD to refresh by sending WINCH (window resize) signal.
+
+        This triggers PADD's TerminalResize handler which:
+        - Checks terminal size with SizeChecker
+        - Clears screen and scrollback buffer
+        - Kills the sleep timer to force immediate redraw
+
+        This is especially useful after Pi-hole updates that restart FTL,
+        ensuring PADD recovers from "No connection to FTL!" errors.
+        """
+        try:
+            # Get PID of padd.sh process in the padd window
+            result = subprocess.run(
+                ['tmux', 'list-panes', '-t', f'{self.session_name}:{self.padd_window}',
+                 '-F', '#{pane_pid}'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+
+            pane_pid = result.stdout.strip()
+            if not pane_pid:
+                logger.warning("Could not find PADD pane PID for refresh")
+                return
+
+            # Get the actual padd.sh process PID (child of the shell in tmux pane)
+            ps_result = subprocess.run(
+                ['pgrep', '-P', pane_pid, '-f', 'padd.sh'],
+                capture_output=True,
+                text=True
+            )
+
+            padd_pid = ps_result.stdout.strip()
+            if padd_pid:
+                # Send WINCH (Window Change) signal to force PADD to redraw
+                subprocess.run(['kill', '-WINCH', padd_pid], check=False)
+                logger.debug(f"Sent WINCH signal to PADD process {padd_pid}")
+            else:
+                logger.debug("PADD process not found, skipping WINCH signal")
+
+        except Exception as e:
+            # Non-critical - PADD will still work, just might not refresh immediately
+            logger.debug(f"Could not send WINCH signal to PADD: {e}")
 
     def _clear_screen(self) -> None:
         """Clear the LCD screen and reset cursor position"""
