@@ -1,462 +1,171 @@
-# Pi-hole Display
+# Pi-hole Display Controller
 
-## Introduction
-
-The Pi-hole Display Controller is a Python application designed to run on a Raspberry Pi with an attached LCD display. It provides a user interface for monitoring Pi-hole statistics and performing system maintenance tasks through physical button controls.
-
-The application works in conjunction with the Pi-hole Admin Display Dashboard (PADD) to provide both visual feedback and control capabilities. It uses the four built-in buttons on the PiTFT 2.8" Plus 320x240 TFT display for functions like dimming the display, updating Pi-hole, and shutting down the system for maintenance.
-
-The application starts automatically on boot using a startup script called from `.bashrc`.
+Physical display and button controls for your Pi-hole installation.
 
 <img src="doc/img/PiTFT_padd.jpg" style=" width:480px; " >
 
-## How to Use the Buttons
+---
 
-The PiTFT 2.8" display has four buttons on the side used for various functions depending on mode:
+## What is This?
 
-- **Normal mode**: Displays PADD on display, dimmable with Button 1
-- **Pi-Hole Update Menu**: Displayed by holding Button 1
-- **System Control Menu**: Displayed by holding Button 2
+The **Pi-hole Display Controller** adds a physical 2.8" TFT display and button controls to your Raspberry Pi running Pi-hole. It displays real-time Pi-hole statistics via PADD (Pi-hole Admin Display Dashboard) and provides physical buttons for managing your Pi-hole and system without needing SSH or a keyboard.
 
-### Button Layout (Top to Bottom)
-
-```
- ┌─────────────────────────┌─────────────┐
- │ PI-HOLE =============== │  Button 1   │ ← Top button
- │                         ├─────────────┤
- │ STATS ================= │  Button 2   │
- │                         ├─────────────┤
- │ NETWORK =============== │  Button 3   │
- │                         ├─────────────┤
- │ SYSTEM ================ │  Button 4   │ ← Bottom button
- └─────────────────────────└─────────────┘
-```
+This is an enhancement to an existing, working Pi-hole setup. You should have Pi-hole installed and functioning on a Raspberry Pi before adding this display controller.
 
 ---
 
-## Normal Mode (PADD Display)
+## Features
 
-When the display shows PADD:
+✨ **Real-time Statistics Display**
+- Shows Pi-hole stats, queries blocked, gravity database info
+- Displays network information and system status
+- Updates automatically via PADD dashboard
+- Adjustable display brightness (8 levels)
 
-**Button 1** - Brightness & Menu
-- **Press**: Dim the display
-- **Hold 2 seconds**: Display the **Pi-Hole Update Menu**
+🎮 **Physical Button Controls**
+- Dim display with single button press
+- Update Pi-hole gravity database
+- Update Pi-hole core software
+- Update PADD dashboard
+- Update Raspberry Pi OS and packages
+- Reboot or shutdown system safely
 
-**Button 2** - System Menu
-- **Hold 2 seconds**: Display the **System Control Menu**
+🚀 **Automatic Startup**
+- Starts automatically on boot
+- No SSH or keyboard required once configured
+- Runs in background via tmux sessions
 
-**Buttons 3 & 4**
-- Not used in normal mode
-
----
-
-## Pi-Hole Update Menu
-
-**How to access**: Hold Button 1 for two seconds
-
-<img src="doc/img/PiTFT_phupdate.jpg" style=" width:480px; " >
-
-The display shows your options:
-
-```
-+---------------------------------+
-|       Pi-Hole Update Menu       |
-+---------------------------------+
-
-Button 2: Update Gravity
-Button 3: Update Pi-hole
-Button 4: Update PADD
-
-Waiting 30s for selection
-Any other button cancels
-```
-
-**What each button does:**
-
-- **Button 1: Cancel**
-  - Returns to PADD display
-
-- **Button 2: Update Gravity**
-  - Updates Pi-hole's blocklists. Use this after adding new blocklists or to refresh ad-blocking lists. Shows download progress and takes 1-3 minutes.
-
-- **Button 3: Update Pi-hole**
-  - Updates Pi-hole core software to the latest version. Use when an update is available. Shows update progress and takes 2-5 minutes. May require a reboot afterward.
-
-- **Button 4: Update PADD**
-  - Updates the PADD dashboard display from GitHub. Shows what changed. Takes less than 1 minute.
-
-All updates display progress in real-time and show error messages if something fails. The menu times out after 30 seconds.
+🔧 **Highly Configurable**
+- Centralized YAML configuration
+- Customizable display brightness levels with gamma correction
+- Adjustable menu timeouts
+- Configurable paths for custom installations
 
 ---
 
-## System Control Menu
+## Hardware Requirements
 
-**How to access**: Hold Button 2 for two seconds
-
-<img src="doc/img/PiTFT_sysupdate.jpg" style=" width:480px; " >
-
-The display shows your options:
-
-```
-+--------------------------------+
-|      System Control Menu       |
-+--------------------------------+
-
-Button 2: Update System
-Button 3: Restart System
-Button 4: Shutdown System
-
-Waiting 30s for selection...
-Any other button cancels
-```
-
-**What each button does:**
-
-- **Button 1: Cancel**
-  - Returns to PADD display
-
-- **Button 2: Update System**
-  - Updates Raspberry Pi OS and all installed packages. Runs `apt update`, `apt full-upgrade`, and `apt autoremove`. Shows update progress and may take 5-15 minutes depending on available updates.
-
-- **Button 3: Restart System**
-  - Reboots the Raspberry Pi. The display will go dark and restart within 1-2 minutes.
-
-- **Button 4: Shutdown System**
-  - Safely shuts down the Raspberry Pi. Unplug power only after the display goes dark and activity LED stops blinking.
-
-The menu times out after 30 seconds.
-
----
-
-## Notes
-
-- When you enter a menu, the display automatically switches to full brightness
-- All operations show their progress on the display
-- Check the logs at `~/pihole_display/log/pihole_display.log` for details
-
-
-## Requirements
-
-### Hardware
-
-* A Raspberry Pi (tested on a model 3B and 3B+)
-
-* Display and enclosure---modify/customize enclosure as you prefer, this is what I did:
-  - Adafruit PiTFT Plus 320x240 2.8" TFT
-    - https://www.adafruit.com/product/2423
-  - Faceplate and Buttons Pack for 2.8" PiTFTs
-    - https://www.adafruit.com/product/2807
-  - Pi Model B+ / Pi 2 / Pi 3 - Case Base and Faceplate Pack - Clear - for 2.8" PiTFT
-    - https://www.adafruit.com/product/3062
+- **Raspberry Pi**: 3B, 3B+, or 4 (RPi 5 not supported)
+- **Display**: Adafruit PiTFT Plus 320x240 2.8" TFT ([link](https://www.adafruit.com/product/2423))
+- **Buttons**: Faceplate and Buttons Pack for 2.8" PiTFTs ([link](https://www.adafruit.com/product/2807))
+- **Case**: Optional but recommended ([example](https://www.adafruit.com/product/3062))
 
 <img src="doc/img/PiTFT_buttons_parts.jpg" style=" width:480px; " >
 
+---
 
+## Documentation
 
-### Software
+📖 **[Installation Guide](INSTALL.md)** - Complete setup instructions from start to finish
 
-* Raspberry Pi OS Lite
-  - Tested on: "Raspberry Pi OS 12 (bookworm)"
-  - https://www.raspberrypi.org/software/operating-systems/
+🎮 **[User Guide](USER_GUIDE.md)** - How to use the buttons and control your Pi-hole
 
-* Python 3
+---
 
-* git
+## Quick Overview
 
-* tmux
+### Button Layout
 
-* yq (YAML parser for reading configuration files)
-
-* Adafruit Raspberry Pi Installer scripts
-  - https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi
-
-* Pi-Hole (optional, but this is what I'm using it for)
-
-* PADD (Pi-hole Admin Display Dashboard)
-  - **Included as a git submodule** - automatically cloned when using `--recurse-submodules`
-  - https://github.com/pi-hole/PADD
-
-* Python packages (see requirements.txt):
-  - gpiozero (tested on Version 1.5.1 or later)
-  - PyYAML
-  - pigpio
-  - setuptools
-
-## Installation
-
-### Hardware
-
-#### PiTFT Plus 2.8" TFT connected to Pi 40-pin GPIO connector
-
-<img src="doc/img/PiTFT_plugin.jpg" style=" width:480px; " >
-
-### Software
-
-#### PiHole
-* Install PiHole and get it up and running for your network
-  - https://docs.pi-hole.net/main/basic-install/
-* If you already have PiHole running, move along...
-
-#### pip3
-If you don't have pip3, install it with
 ```
-sudo apt install python3-pip
+ ┌─────────────────────────┌─────────────┐
+ │ PI-HOLE =============== │  Button 1   │ ← Brightness / Pi-hole Menu
+ │                         ├─────────────┤
+ │ STATS ================= │  Button 2   │ ← System Menu
+ │                         ├─────────────┤
+ │ NETWORK =============== │  Button 3   │ ← Menu Option 1
+ │                         ├─────────────┤
+ │ SYSTEM ================ │  Button 4   │ ← Menu Option 2
+ └─────────────────────────└─────────────┘
 ```
 
-#### Git, tmux, and yq
-Install git, tmux, and yq:
-```
-sudo apt install git tmux
-sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_arm -O /usr/bin/yq
-sudo chmod +x /usr/bin/yq
-```
+### Normal Mode (PADD Display)
+- **Button 1 Press**: Cycle brightness levels, from full to off
+- **Button 1 Hold (2s)**: Open Pi-hole Update Menu
+- **Button 2 Hold (2s)**: Open System Control Menu
 
-#### Get pihole_display (this repository)
-**Important:** Use `--recurse-submodules` to automatically clone the PADD submodule:
-```
-cd ~
-git clone --recurse-submodules https://github.com/andersix/pihole_display.git
-```
+### Pi-hole Update Menu
+- **Button 2**: Update Gravity (blocklists)
+- **Button 3**: Update Pi-hole core
+- **Button 4**: Update PADD dashboard
 
-If you already cloned without submodules, initialize them:
-```
-cd ~/pihole_display
-git submodule update --init --recursive
-```
+### System Control Menu
+- **Button 2**: Update Raspberry Pi OS
+- **Button 3**: Reboot system
+- **Button 4**: Shutdown system
 
-**Note:** PADD is now included as a git submodule and configured by default in `config/config.yaml`. If you prefer to use a different PADD installation location, you can edit the `paths.padd_dir` and `paths.padd_script` settings in the config file.
+See the **[User Guide](USER_GUIDE.md)** for detailed instructions.
 
-#### pigpio
-If you don't have pigpio, install it with
-```
-sudo apt install pigpio
-```
-* enter ```sudo raspi-config``` on the command line, and enable Remote GPIO.
-  - select "3 Interface Options", then "P8 Remote GPIO", then "Yes" to enable.
-  - select OK then Finish to exit raspi-config
-* enable and start the gpio service
-  - ```sudo systemctl enable pigpiod```
-  - ```sudo systemctl start pigpiod```
-  - NOTE: starting and enabling the pigpiod service will not allow remote connections unless configured accordingly, but that's OK since we're only using it locally.
+---
 
-#### Get the Adafruit installer scripts for the PiTFT:
-```
-cd ~
-sudo pip3 install --upgrade adafruit-python-shell click==7.0
-git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
-cd Raspberry-Pi-Installer-Scripts
-```
+## Software Components
 
-#### Pick the appropriate installer
-I'm using the PiTFT 2.8 Capacitive, so am using:
-```
-sudo python3 adafruit-pitft.py --display=28c --rotation=90 --install-type=console
-```
-* for other displays, or details, check here:
-  - https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi/easy-install-2
-  
-#### Reboot and return to here
-Once the PiTFT script is installed, reboot your Pi, and return to the next step below.
+This project uses:
+- **Python 3** - Application logic and hardware control
+- **PADD** - Pi-hole Admin Display Dashboard (included as submodule from [pi-hole/PADD](https://github.com/pi-hole/PADD))
+- **tmux** - Terminal multiplexer for managing display and control windows
+- **pigpio** - Hardware PWM control for display backlight
+- **gpiozero** - GPIO button interface
 
-#### Enable Auto-Login (Required)
-The display controller requires auto-login to start automatically on boot.
+---
 
-Configure auto-login using raspi-config:
-```bash
-sudo raspi-config
-```
-- Select "1 System Options"
-- Select "S5 Boot / Auto Login"
-- Select "B2 Console Autologin" (Text console, automatically logged in as 'pi' user)
-- Select Finish and reboot if prompted
+## Getting Started
 
-#### Change the console font
-* Edit the /boot/cmdline.txt file and to the end of the line, after "rootwait", add:
-```
-fbcon=map:10 fbcon=font:VGA8x8
-```
-Save the file, and it should have
-```
-$ cat /boot/cmdline.txt
-console=serial0,115200 console=tty1 root=PARTUUID=XXXXXXXX-XX rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait fbcon=map:10 fbcon=font:VGA8x8
-```
-(NOTE: don't change the value for the PARTUUID in your cmdline.txt file)
+Ready to install? Head over to the **[Installation Guide](INSTALL.md)** for complete setup instructions.
 
-##### Improve console font
-Run the command
-```
-sudo dpkg-reconfigure console-setup
-```
-and go select the following options to get Terminus 6x12
-* Encoding:
-  - UTF-8
-* Character set to support:
-  - Guess optimal character set
-* Font for the console:
-  - Terminus
-* Font size:
-  - 6x12 (framebuffer only)
+The installation process has three phases:
+1. **Foundation** - Ensure Raspberry Pi and Pi-hole are working
+2. **Hardware** - Install and configure the PiTFT display
+3. **Application** - Install the display controller software
 
-#### Install Python Dependencies
+Estimated time: 1-2 hours for first-time installation
 
-Install the required Python packages:
-```bash
-cd ~/pihole_display
-sudo pip3 install -r requirements.txt
-```
+---
 
-#### Add User to Pi-hole Group
+## Screenshots
 
-Pi-hole requires authentication for PADD. Add your user to the pihole group:
-```bash
-sudo usermod -G pihole pi
-```
+<img src="doc/img/PiTFT_padd.jpg" style=" width:480px; " >
+*PADD displaying Pi-hole statistics*
 
-See https://github.com/pi-hole/PADD?tab=readme-ov-file#authentication for details and other options.
+<img src="doc/img/PiTFT_phupdate.jpg" style=" width:480px; " >
+*Pi-hole Update Menu*
 
-#### Verify pigpiod is Running
+<img src="doc/img/PiTFT_sysupdate.jpg" style=" width:480px; " >
+*System Control Menu*
 
-The pigpio daemon should already be running from the earlier setup step. Verify it:
-```bash
-sudo systemctl status pigpiod
-```
+---
 
-If not running, start it:
-```bash
-sudo systemctl enable pigpiod
-sudo systemctl start pigpiod
-```
+## Contributing
 
-#### Configure Display Controller to Start at Boot
+Contributions are welcome! Here's how you can help:
 
-**Important:** This assumes your Raspberry Pi is configured for auto-login on boot (configured earlier).
+- 🐛 **Report bugs** - Open an issue describing the problem
+- 💡 **Suggest features** - Share your ideas for improvements
+- 🔧 **Submit pull requests** - Fix bugs or add features
+- 📖 **Improve documentation** - Help make the docs clearer
 
-Edit the pi user's `~/.bashrc` and add the following code **at the very top** of the file:
-
-```bash
-# Run PiHole display controller
-if [ "$TERM" == "linux" ] ; then
-  if [ -f /home/pi/pihole_display/scripts/start_display.sh ]; then
-      /home/pi/pihole_display/scripts/start_display.sh
-      return 0
-  fi
-fi
-```
-
-This startup script (`scripts/start_display.sh`) automatically:
-- Creates a tmux session with two windows
-- Starts PADD in the first window to display Pi-hole statistics
-- Starts the button controller (`main.py`) in the second window
-- Switches to the PADD window for display
-- Logs startup details to `log/startup.log`
-
-**Note:** If you want to customize the PADD location, edit `config/config.yaml` and update the `paths.padd_dir` and `paths.padd_script` settings.
-
-#### Final Reboot
-
-Reboot your Pi to start the display controller:
-```bash
-sudo reboot
-```
-
-After reboot, the display should show the PADD status screen for your Pi-hole, and the buttons should be working as described earlier.
-
-That's it! If you have issues, see the Troubleshooting section below.
-
-## Troubleshooting
-
-### Check if the tmux session is running
-```bash
-tmux list-sessions
-```
-You should see a session named "display". If not, the startup script may have failed.
-
-### Check startup logs
-```bash
-cat ~/pihole_display/log/startup.log
-```
-This shows detailed information about the tmux session creation and startup process.
-
-### Check application logs
-```bash
-tail -f ~/pihole_display/log/pihole_display.log
-```
-This shows runtime logs from the Python application, including button presses and any errors.
-
-### Verify pigpiod is running
-```bash
-sudo systemctl status pigpiod.service
-```
-You should see "Active: active (running)". If not:
-```bash
-sudo systemctl enable pigpiod
-sudo systemctl start pigpiod
-```
-
-### Check if Python process is running
-```bash
-pgrep -f "main.py"
-```
-Should return a process ID. If not, the controller isn't running.
-
-### Attach to the tmux session to see what's happening
-```bash
-tmux attach -t display
-```
-- Press `Ctrl+b` then `w` to see and select between windows
-- Press `Ctrl+b` then `d` to detach without stopping the session
-
-### Common Issues
-
-**Buttons not responding:**
-- Verify Python process is running: `pgrep -f main.py`
-- Check that pigpiod is running
-- Review application logs for GPIO errors
-- Check for syntax errors if you modified the code
-
-**Display not showing PADD:**
-- Verify tmux session exists: `tmux ls`
-- Check PADD submodule is initialized: `ls ~/pihole_display/PADD/padd.sh`
-- Review startup logs: `cat ~/pihole_display/log/startup.log`
-
-**Application won't start on boot:**
-- Verify auto-login is enabled: `sudo raspi-config`
-- Check .bashrc has startup code at the top
-- Verify file paths in the .bashrc code match your installation
-
-## Updates
-
-### Updating the Application
-
-When there are updates to this project:
-```bash
-cd ~/pihole_display
-git pull
-git submodule update --remote --merge  # Update PADD submodule
-sudo reboot
-```
-
-The reboot will automatically start the updated application via the `.bashrc` startup script.
-
-### Update History
-
-* **2025-11-02**
-  - PADD is now included as a git submodule
-  - Configuration centralized in `config/config.yaml`
-  - Modular architecture with separate controllers for display, buttons, PiHole, and system operations
-  - Menu system for managing both pi-hole and system updates
-  - LED backlight using hardware PWM
-
-* **2022-5-09**
-  - Now using the pigpio factory for PWM control to eliminate backlight flicker when dimmed
-  - Updated buttons to use press-and-hold (2 second) pattern for menu activation
-
-## Modifications and Improvements
-
-Submit pull requests. Go for it. You can do it.
+---
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This project uses Pi-hole, which is separately licensed under the EUPL v1.2.
+### Third-Party Components
+
+- **Pi-hole** - Licensed under EUPL v1.2 (https://github.com/pi-hole/pi-hole)
+- **PADD** - Part of the Pi-hole project (https://github.com/pi-hole/PADD)
+
+---
+
+## Support
+
+- 📚 **Documentation**: [Installation Guide](INSTALL.md) | [User Guide](USER_GUIDE.md)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/andersix/pihole_display/issues)
+- 💬 **Discussions**: Open a GitHub issue for questions
+
+---
+
+## Acknowledgments
+
+- **Pi-hole Team** - For the amazing ad-blocking DNS server and PADD dashboard
+- **Adafruit** - For the PiTFT display hardware and driver software
+- **Community Contributors** - For feedback, bug reports, and improvements
