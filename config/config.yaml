@@ -53,15 +53,15 @@ button_functions:
 # Application paths
 paths:
   # Base directories
-  root_dir: "/home/pi/pihole_display"
-  config_dir: "/home/pi/pihole_display/config"
-  log_dir: "/home/pi/pihole_display/log"
+  root_dir: "/home/pi/PhDC"
+  config_dir: "/home/pi/PhDC/config"
+  log_dir: "/home/pi/PhDC/log"
   # PADD related paths (using submodule by default)
-  padd_dir: "/home/pi/pihole_display/PADD"
-  padd_script: "/home/pi/pihole_display/PADD/padd.sh"
+  padd_dir: "/home/pi/PhDC/PADD"
+  padd_script: "/home/pi/PhDC/PADD/padd.sh"
   # System paths
   python_path: "/usr/bin/python3"
-  main_script: "/home/pi/pihole_display/main.py"
+  main_script: "/home/pi/PhDC/main.py"
 
 # Timing settings
 timing:
@@ -70,7 +70,7 @@ timing:
 
 # Logging configuration
 logging:
-  file: "pihole_display.log"
+  file: "controller.log"
   level: "DEBUG"
   max_bytes: 1048576  # 1MB
   backup_count: 5

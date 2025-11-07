@@ -242,12 +242,12 @@ Clone this repository with the PADD submodule:
 
 ```bash
 cd ~
-git clone --recurse-submodules https://github.com/andersix/pihole_display.git
+git clone --recurse-submodules https://github.com/andersix/PhDC.git
 ```
 
 If you already cloned without submodules, initialize them:
 ```bash
-cd ~/pihole_display
+cd ~/PhDC
 git submodule update --init --recursive
 ```
 
@@ -258,7 +258,7 @@ git submodule update --init --recursive
 Install the required Python packages:
 
 ```bash
-cd ~/pihole_display
+cd ~/PhDC
 sudo pip3 install -r requirements.txt
 ```
 
@@ -317,8 +317,8 @@ Add these lines at the top:
 ```bash
 # Run PiHole display controller
 if [ "$TERM" == "linux" ] ; then
-  if [ -f /home/pi/pihole_display/scripts/start_display.sh ]; then
-      /home/pi/pihole_display/scripts/start_display.sh
+  if [ -f /home/pi/PhDC/scripts/start_display.sh ]; then
+      /home/pi/PhDC/scripts/start_display.sh
       return 0
   fi
 fi
@@ -365,7 +365,7 @@ Most users won't need to change anything, but all settings can be customized if 
 
 ## Configuration File
 
-All settings are in: `~/pihole_display/config/config.yaml`
+All settings are in: `~/PhDC/config/config.yaml`
 
 Common settings you might want to adjust:
 
@@ -396,7 +396,7 @@ If you make configuration changes or want to restart the application:
 
 2. **Restart the application**:
    ```bash
-   /home/pi/pihole_display/scripts/start_display.sh
+   /home/pi/PhDC/scripts/start_display.sh
    ```
 
 The display should show PADD within a few seconds.
@@ -429,22 +429,22 @@ You should see a session named "display". If not:
 
 1. **Check startup logs:**
    ```bash
-   cat ~/pihole_display/log/startup.log
+   cat ~/PhDC/log/startup.log
    ```
 
 2. **Verify PADD submodule is initialized:**
    ```bash
-   ls ~/pihole_display/PADD/padd.sh
+   ls ~/PhDC/PADD/padd.sh
    ```
    If file doesn't exist, initialize submodules:
    ```bash
-   cd ~/pihole_display
+   cd ~/PhDC
    git submodule update --init --recursive
    ```
 
 3. **Manually start the session:**
    ```bash
-   /home/pi/pihole_display/scripts/start_display.sh
+   /home/pi/PhDC/scripts/start_display.sh
    ```
 
 ### Buttons Not Responding
@@ -467,7 +467,7 @@ You should see a session named "display". If not:
 
 3. **Check application logs for errors:**
    ```bash
-   tail -f ~/pihole_display/log/pihole_display.log
+   tail -f ~/PhDC/log/controller.log
    ```
 
 ### Application Won't Start on Boot
@@ -486,7 +486,7 @@ You should see a session named "display". If not:
 
 3. **Verify file paths are correct:**
    ```bash
-   ls -la /home/pi/pihole_display/scripts/start_display.sh
+   ls -la /home/pi/PhDC/scripts/start_display.sh
    ```
 
 ## Viewing Logs
@@ -494,13 +494,13 @@ You should see a session named "display". If not:
 ### Startup Logs
 Shows tmux session creation and initialization:
 ```bash
-cat ~/pihole_display/log/startup.log
+cat ~/PhDC/log/startup.log
 ```
 
 ### Application Logs
 Shows runtime activity, button presses, and errors:
 ```bash
-tail -f ~/pihole_display/log/pihole_display.log
+tail -f ~/PhDC/log/controller.log
 ```
 
 ### Live Monitoring
@@ -522,7 +522,7 @@ tmux attach -t display
 When there are updates to this project:
 
 ```bash
-cd ~/pihole_display
+cd ~/PhDC
 git pull
 sudo reboot
 ```

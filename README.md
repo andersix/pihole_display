@@ -159,7 +159,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - 📚 **Documentation**: [Installation Guide](INSTALL.md) | [User Guide](USER_GUIDE.md)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/andersix/pihole_display/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/andersix/PhDC/issues)
 - 💬 **Discussions**: Open a GitHub issue for questions
 
 ---

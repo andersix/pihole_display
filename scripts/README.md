@@ -13,8 +13,8 @@ Add the following code to the **very top** of your `~/.bashrc` file:
 ```bash
 # Run PiHole display controller
 if [ "$TERM" == "linux" ] ; then
-  if [ -f /home/pi/pihole_display/scripts/start_display.sh ]; then
-      /home/pi/pihole_display/scripts/start_display.sh
+  if [ -f /home/pi/PhDC/scripts/start_display.sh ]; then
+      /home/pi/PhDC/scripts/start_display.sh
       return 0
   fi
 fi

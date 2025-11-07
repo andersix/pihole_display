@@ -179,10 +179,10 @@ Any other button cancels
 If you need to troubleshoot or see detailed information:
 ```bash
 # View application logs
-tail -f ~/pihole_display/log/pihole_display.log
+tail -f ~/PhDC/log/controller.log
 
 # View startup logs
-cat ~/pihole_display/log/startup.log
+cat ~/PhDC/log/startup.log
 ```
 
 ### Menu Timeouts

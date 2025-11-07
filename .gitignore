@@ -62,7 +62,7 @@ venv.bak/
 # ============================================================================
 # Application-specific
 # ============================================================================
-# Runtime logs (log/ directory contains pihole_display.log and startup.log)
+# Runtime logs (log/ directory contains controller.log and startup.log)
 log/
 *.log
 
