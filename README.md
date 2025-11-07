@@ -8,7 +8,7 @@ Physical display and button controls for your Pi-hole installation.
 
 ## What is This?
 
-The **Pi-hole Display Controller** adds a physical 2.8" TFT display and button controls to your Raspberry Pi running Pi-hole. It displays real-time Pi-hole statistics via PADD (Pi-hole Admin Display Dashboard) and provides physical buttons for managing your Pi-hole and system without needing SSH or a keyboard.
+The **Pi-hole Display Controller** adds a 2.8" LCD display and button controls to your Raspberry Pi running Pi-hole. It displays real-time Pi-hole statistics via PADD (Pi-hole Admin Display Dashboard) and provides physical buttons for managing your Pi-hole and system without needing SSH or a keyboard.
 
 This is an enhancement to an existing, working Pi-hole setup. You should have Pi-hole installed and functioning on a Raspberry Pi before adding this display controller.
 
