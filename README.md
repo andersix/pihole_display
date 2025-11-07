@@ -8,7 +8,7 @@ The application works in conjunction with the Pi-hole Admin Display Dashboard (P
 
 The application starts automatically on boot using a startup script called from `.bashrc`.
 
-<img src="doc/img/PiHole_TFT_buttons.jpg" style=" width:480px; " >
+<img src="doc/img/PiTFT_padd.jpg" style=" width:480px; " >
 
 ## How to Use the Buttons
 
