@@ -1,3 +1,5 @@
+# NOTE: DOES NOT WORK IN RPIOS > BOOKWORM... I'm working on this. This message will self-destruct when working
+
 # Pi-hole Display Controller
 
 Physical display and button controls for your Pi-hole installation.
