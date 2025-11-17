@@ -102,29 +102,40 @@ You'll need the following display components:
 
 The PiTFT display requires special drivers from Adafruit.
 
-1. **Install prerequisite packages**:
-   ```bash
-   sudo apt install python3-pip
-   sudo pip3 install --upgrade adafruit-python-shell click==7.0
-   ```
+(Note: Adafruit has not updated their install flow to work with latest versions of Raspberry Pi OS, so the process below is my hack to make it work)
 
-2. **Download Adafruit installer scripts**:
+1. **As root, Download Adafruit installer scripts, and create a python virtual environment**:
    ```bash
-   cd ~
+   # become root
+   sudo su -
    git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
    cd Raspberry-Pi-Installer-Scripts
+   python -v venv venv
+   source venv/bin/activate
+   ```
+
+2. **Hack Adafruit script**:
+- Edit the file `adafruit-pitft.py`
+  - In this file, change the line:
+    - `username = os.environ["SUDO_USER"]`
+  - To:
+    - `username = os.environ.get('USER')`
+- Then, while still root, and with the virtual environment active, from the step above, and edits in place to the `adafruit-pitft.py` file, run the command:
+   ```bash
+   pip3 install --upgrade adafruit-python-shell click==7.0
    ```
 
 3. **Run the PiTFT installer**:
 
-   For PiTFT 2.8" Capacitive (most common):
+   For the PiTFT 2.8" Capacitive display:
+- While still in the root virtual environment session from previous steps:
    ```bash
-   sudo python3 adafruit-pitft.py --display=28c --rotation=90 --install-type=console
+   python3 adafruit-pitft.py --display=28c --rotation=90 --install-type=console
    ```
 
    For other display types, see: https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi/easy-install-2
 
-4. **Reboot when prompted**:
+5. **Reboot when prompted**:
    ```bash
    sudo reboot
    ```
